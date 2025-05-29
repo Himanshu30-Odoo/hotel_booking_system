@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="portal_my_home_booking" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title"> My Bookings </t>
+                <t t-set="url" t-value="'/my/booking'"/>
+                <t t-set="placeholder_count" t-value="'booking_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
+ 
+       
+       
+       
+        <!-- <xpath expr="//div[@id='portal_my_home']" position="inside">
+            <div class="row">
+                <div class="col-6 col-md-4">
+                    <a href="/my/bookings" class="btn btn-block btn-primary mb-3">
+                        My Bookings (<t t-esc="booking_count"/>)
+                    </a>
+                </div>
+            </div>
+        </xpath> -->
+   

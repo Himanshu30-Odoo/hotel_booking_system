@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+
+        <template id="portal_my_bookings_template" name="My Bookings">
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <h2 class="mt-3 mb-3">My Room Bookings</h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="bookings" t-as="booking">
+                                <tr>
+                                    <td><t t-esc="booking.name"/></td>
+                                    <td><t t-esc="booking.booking_date"/></td>
+                                    <td><t t-esc="booking.status"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

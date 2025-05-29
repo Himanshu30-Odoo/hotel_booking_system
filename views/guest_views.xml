@@ -1,0 +1,98 @@
+<odoo>
+    <!-- This is A Form View  -->
+
+    <record id="view_hotel_guest_form" model="ir.ui.view">
+        <field name="name">hotel.guest.form</field>
+        <field name="model">hotel.guest</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                        <div style="width:100px;">
+                                <h1 class="d-flex">
+                                    <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                                    <field name="tracking" invisible="name == '/'"/>
+                                </h1>
+                        </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="age" />
+                            <field name="adhar_no" />
+                            <field name="pan_no" />
+                        </group>
+                        <group>
+                        
+                            <field name="gender"/>
+                            <field name="booking_date" widget="date" />
+                            <field name="nationality" />
+                            <field name="country_code" readonly="1"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- This is A Tree View  -->
+    <record id="view_hotel_guest_tree" model="ir.ui.view">
+        <field name="name">hotel.guest.tree</field>
+        <field name="model">hotel.guest</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                <field name="tracking" readonly="True"/>
+                <field name="name"/>
+                <field name="email" optional="show"/>
+                <field name="phone"/>
+                <field name="booking_date" widget="date"/>
+                <field name="nationality" />
+                <field name="gender" widget="badge" decoration-info="gender == 'male'" decoration-warning="gender == 'female'"/>
+            </tree>
+        </field>
+    </record>
+    <!-- This is A Search View  -->
+    <record id="guest_search_view" model="ir.ui.view">
+        <field name="name">hotel.guest.search.view</field>
+        <field name="model">hotel.guest</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+	           <field name="name"/> 
+	           <field name="phone"/>
+                <field name="gender"/>
+                <filter string="Male" name="male_learner" domain="[('gender','=' , 'male')]"/>
+                 <filter string="Female" name="female_learner" domain="[('gender','=' , 'female')]"/>
+                 <group expand="1" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                 </group>
+                 <searchpanel>
+                    <field name="gender" string="Gender" enable_counters="1"/>
+                 </searchpanel>
+
+            </search>
+        </field>
+    </record>
+    <!-- This is A Calender View  -->
+    <record id="guest_calender_view" model="ir.ui.view">
+        <field name="name">hotel.guest.calender.view</field>
+        <field name="model">hotel.guest</field>
+        <field name="arch" type="xml">
+            <calendar string="Guest Calender" date_start="booking_date" color="name">
+	           <field name="name"/> 
+	           <field name="email"/>
+	           <field name="phone"/>
+	           <field name="gender"/>
+            </calendar>
+        </field>
+    </record>
+    <!-- This is A Action -->
+    <record id="action_hotel_guest" model="ir.actions.act_window">
+        <field name="name">Guests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.guest</field>
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+    <!-- This is A Main Submenu  -->
+    <menuitem id="menu_hotel_guest" name="Guests" parent="menu_hotel_booking_root" sequence="3" action="action_hotel_guest"/>
+
+</odoo>

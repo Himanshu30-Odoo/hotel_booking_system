@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="booking_confirmation" name="Booking Confirmation">
+        <t t-call="website.layout">
+            <div class="container">
+                <h2>Booking Confirmed!</h2>
+                <p><strong>Guest Name:</strong> <t t-esc="guest_name"/></p>
+                <p><strong>Room Name:</strong> <t t-esc="room_name"/></p>
+                <p><strong>Check-in Date:</strong> <t t-esc="checkin_date"/></p>
+                <p><strong>Check-out Date:</strong> <t t-esc="checkout_date"/></p>
+                <p>Thank you for booking with us!</p>
+            </div>
+        </t>
+    </template>
+</odoo>

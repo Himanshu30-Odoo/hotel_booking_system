@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="booking_form" name="Booking Form">
+        <t t-call="website.layout">
+            <div class="container">
+                <h2>Booking Form for <t t-esc="room.name"/></h2>
+                <form action="/hotel/confirm_booking" method="post">
+                    <input type="hidden" name="room_id" t-att-value="room.id"/>
+
+                    <div class="form-group">
+                        <label for="guest_name">Guest Name:</label>
+                        <input type="text" id="guest_name" name="guest_name" class="form-control" required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" id="phone" name="phone" class="form-control" required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nationality">Nationality:</label>
+                        <select id="nationality" name="nationality" class="form-control">
+                            <t t-foreach="request.env['res.country'].search([])" t-as="country">
+                                <option t-att-value="country.id"><t t-esc="country.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkin_date">Check-in Date:</label>
+                        <input type="date" id="checkin_date" name="checkin_date" class="form-control" required="required"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkout_date">Check-out Date:</label>
+                        <input type="date" id="checkout_date" name="checkout_date" class="form-control" required="required"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3">Confirm Booking</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

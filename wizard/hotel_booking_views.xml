@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle
+  -->
+
+<odoo>
+    <record id="room_booking_form_wizard" model="ir.ui.view">
+        <field name="name">booking.room.wizard.form</field>
+        <field name="model">booking.room.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Export Hotel Booking">
+                 <h5>Click on Export button to export selected Hotel Booking into excel file</h5>
+                <footer>
+                    <button  string="Export" name="room_booking_button" type="object"
+                            class="oe_highlight"/>
+                    
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_act_room_booking_wizard" model="ir.actions.act_window">
+        <field name="name">Export Hotel Booking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">booking.room.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+       <field name="binding_model_id" ref="hotel_booking_system.model_room_booking"/>
+    </record>
+
+        <!-- <menuitem name="Client" id="client_menu" parent="dev_practice.learn_odoo_main_menu_id" sequence="4" action="action_act_client_order"/> -->
+
+</odoo>

@@ -1,0 +1,127 @@
+<odoo>
+    <!-- This is A Form View  -->
+    <record id="view_facility_ticket_form" model="ir.ui.view">
+        <field name="name">hotel.facility.ticket.form</field>
+        <field name="model">hotel.facility.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Facilities">  
+                
+
+                    <!-- <header>
+                        <button name="button_draft" type="object"   string="Draft" class="btn btn-primary" invisible="1" />
+                        <button name="button_in_progress" type="object"   string="In Progress" class="btn btn-warning"  invisible="status in [('status', '!=', 'draft')]"/>
+                        <button name="button_done" type="object"   string="Done" class="btn btn-success" invisible="status   in  [('status', '!=', 'in_progress')]"/>
+                        <button name="button_cancelled" type="object"   string="Cancelled" class="btn btn-danger" invisible="status   in  [('status', '=', 'cancelled')]"/>
+
+                        <field name="status" widget="statusbar"/>
+                    </header> -->
+                <sheet>
+                        <!-- <div style="width:100px;">
+                            <h1 class="d-flex">
+                                <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                                <field name="tracking"/>
+                            </h1>
+                        </div> -->
+                    <group>
+                        <group>
+                            <field name="facility_name"/>
+                            <field name="day"/>
+                            <field name="facility_type"/>
+                            <field name="assigned_employee_id"/>
+                            <field name="date_requested"/>
+                            <field name="date_completed"/>
+                        </group>
+                        <group>
+                            <field name="price"/>
+                            <field name="description"/>
+                            <field name="file" widget="image"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- This is A Tree View  -->
+    <record id="view_facility_ticket_tree" model="ir.ui.view">
+        <field name="name">hotel.facility.ticket.tree</field>
+        <field name="model">hotel.facility.ticket</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                <field name="tracking" readonly="True"/>            
+                <field name="name"/>
+                <field name="facility_name"/>
+                <field name="facility_type"/>
+                <field name="status"/>
+                <field name="date_requested"/>
+            </tree>
+        </field>
+    </record>
+    <!-- This is A Kanban View  -->
+    <record id="facility_kanban_view" model="ir.ui.view">
+        <field name="name">hotel.facility.ticket.kanban.view</field>
+        <field name="model">hotel.facility.ticket</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_res_partner_kanabn" js_class="website_pages_kanban" type="object" sample="1" >
+                <field name="name"/>
+                <template>
+                <t t-name="kanban-menu">
+                            <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                            <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        </t>
+                    <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="col-4">
+                                    <aside class="o_kanban_aside_full">
+                                    <div class="o_kanban_image_box" style="height: 100px; width: 100px; overflow: hidden;">
+                                        <img t-att-src="kanban_image('hotel.facility.ticket', 'file', record.id.value)"
+                                           alt="Facility Image" style="height: 100%; width: 100%; object-fit: cover;" class="img img-fluid"/>
+                                    </div>
+
+                                    </aside>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div>
+                                    <field name="priority" widget="priority" groups="base.group_user"/>
+                                </div>
+                                <div class="row" t-if="!selection_mode">
+                                    <div t-if="record.name" class="col-6 text-left">
+                                    <strong>Facility Name:</strong>
+                                    <field name="facility_name" />
+                                </div>
+
+                                <!-- <div t-if="record.name" class="col-6 text-center">
+                                    <strong>Day: </strong>
+                                    <field name="day" />
+
+                                </div> -->
+                                <div t-if="record.price" class="col-6 text-center">
+                                    <strong>Price: </strong>
+                                    <field name="price"  widget="monetary" options="{'currency_field': 'company_currency'}"/>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                    </t>
+                </template>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- This is A Action -->
+    <record id="action_facility_ticket" model="ir.actions.act_window">
+        <field name="name">Facility</field>
+        <field name="res_model">hotel.facility.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <!-- This is A Main Submenu -->
+    <menuitem id="menu_hotel_facilities" name="Facilities" parent="menu_hotel_booking_root" sequence="5" action="action_facility_ticket"/>
+
+   
+</odoo>
+
+

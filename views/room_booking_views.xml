@@ -1,0 +1,314 @@
+<odoo>
+    <!-- This is A Form View  -->
+    <record id="view_room_booking_form" model="ir.ui.view">
+        <field name="name">room.booking.form</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            
+            <form>
+                
+                     <!-- This is a Buttons On Workflow -->
+                    <header>
+                        <button name="button_confirmed" type="object" string="Confirm"  class="btn btn-success" invisible="status != 'draft'"/>
+                        <button name="button_checked_in" type="object" string="Check In" class="btn btn-primary" invisible="status != 'confirmed'"/>
+                        <button name="button_checked_out" type="object" string="Check Out"  class="btn btn-primary" invisible="status != 'checked_in'"/>
+                        <button name="button_cancelled" type="object" string="Cancel" class="btn btn-danger" invisible="status in ('checked_out', 'cancelled')"/>
+                        <button name="button_draft" type="object" string="Draft"  class="btn btn-secondary" invisible="status != 'cancelled'"/>
+
+                        <button name="%(hotel_booking_system.action_act_room_booking_wizard)d"  type="action"  string="Export Hotel Booking" class="btn-info" />
+                        <field name="status" widget="statusbar" statusbar_visible="draft,confirmed,checked_in,checked_out,cancelled" statusbar_colors="{'confirmed': 'blue', 'checked_in': 'orange', 'checked_out': 'green', 'cancelled': 'red'}" />                    </header>
+                <sheet>
+                    
+
+                    <!-- This is a Smart Buttons On Workflow -->
+
+                    <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="view_booking"
+                                    class="oe_stat_button"
+                                    icon="fa-save"
+                                    invisible="booking_total_count &lt;= 0"
+                                    >
+                                <field string="Documents" name="booking_total_count" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                string="Rooms"
+                                name="view_rooms"
+                                class="oe_stat_button"
+                                icon="fa-flickr"
+                                >
+                            </button>
+                    </div>
+
+                        
+
+                    <div style="width:100px;">
+                        <h1 class="d-flex">
+                            <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                            <field name="tracking" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="guest_id"/>
+                            <field name="check_in" widget="date"/>
+                            <field name="total_amount" readonly="1"/>
+                            <field name="tax_ids" widget="many2many_tags" />
+                            <field name="amount_with_tax" />
+                        </group>
+                        <group>
+                            <field name="room_id"/>
+                            <field name="check_out" widget="date"/>
+                            <field name="gender"/>
+                            <field name="booking_date" widget="date" />
+                            
+                        </group>
+                    </group>
+                    <!-- This is a Notebook -->
+                    <notebook>
+                        <page name="other_details" string="Other Details">
+                            <group>
+                                <group>
+                                    <field name="description" />
+                                    <field name="document" widget="image" />
+                                </group>
+                            
+                            </group>
+                            
+                        </page>
+                        <page name="documents" string="Documents">
+                        <group>
+                            <field name="attachment_ids" mode="kanban"  context="{'default_res_model': 'room.booking', 'default_res_id': active_id}" required="True">
+                               <kanban>
+                                    <field name="datas" />
+                                    <field name="mimetype" />
+                                    <field name="name" />
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click">
+
+                                                <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.raw_value)" height="100" width="182" class="oe_avatar oe_kanban_avatar_smallbox mb0"/>
+                                                <!-- <img t-if="record.mimetype.raw_value and record.mimetype.raw_value.startsWith('image')"
+                                                    t-att-src="'data:image/png;base64,%s' % record.datas.raw_value"
+                                                    style="width:100px; height:100px; object-fit:cover;" /> -->
+                                                <div><field name="name"/></div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </group>
+                        </page>
+                        <!-- This Is A Page In Kanban View set  -->
+                        <page name="facilites" string="Other Facilities">
+                                <group>
+                                    <field name="facilities_ids" widget="many2many_kanban">
+                                        <kanban sample="1">
+                                            <field name="id"/>
+                                            <field name="facility_name"/>
+                                            <field name="file"/>
+                                            <field name="price"/>
+                                            <field name="priority"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                                        <div class="o_kanban_image_fill_left"
+                                                            t-att-style="'background-image:url(' + kanban_image('hotel.facility.ticket', 'file', record.id.raw_value) + ')'"
+                                                            role="img"
+                                                            t-att-title="record.facility_name.value">
+                                                        </div>
+                                                        <div class="oe_kanban_details">
+                                                            <strong>
+                                                                <t t-esc="record.facility_name.value"/>
+                                                            </strong>
+                                                            <div>
+                                                                Price: <t t-esc="record.price.value or 'N/A'"/>
+                                                            </div>
+                                                            <div class="oe_kanban_footer_left">
+                                                                <field name="priority" widget="priority"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                </group>  
+                            </page>
+                    </notebook>
+                </sheet>
+                <!-- This is A Chatter -->
+                 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"></field>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!-- This is A Tree View  -->
+    <record id="view_room_booking_tree" model="ir.ui.view">
+        <field name="name">room.booking.tree</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="priority" optional="show" widget="priority" nolabel="1" />
+                <field name="tracking" readonly="True"/>
+                <field name="guest_id"/>
+                <field name="room_id" />
+                <field name="check_in" widget="date"/>
+                <field name="check_out" widget="date"/>
+                <field name="booking_date" widget="date" />
+                <field name="currency_id" column_invisible="True" />
+                <field name="amount_with_tax" sum="Total price" widget="monetary" decoration-bf="status in ['confirmed', 'checked_out']"/>
+                <field name="status" optional="show" widget="badge" decoration-success="status == 'confirmed'" decoration-primary="status == 'checked_out'" decoration-warning="status == 'checked_in'" decoration-info="status == 'draft'" decoration-danger="status == 'cancelled'"/>
+            </tree>
+        </field>
+    </record>
+    <!-- This is A Search View  -->
+    <record id="booking_search_view" model="ir.ui.view">
+        <field name="name">room.booking.search.view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+	           <field name="guest_id"/> 
+	           <field name="room_id"/>
+                <field name="gender"/>
+                <filter string="Male" name="male_learner" domain="[('gender','=' , 'male')]"/>
+                 <filter string="Female" name="female_learner" domain="[('gender','=' , 'female')]"/>
+                 <group expand="1" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                 </group>
+                 <searchpanel>
+                    <field name="gender" string="Gender" enable_counters="1"/>
+                 </searchpanel>
+
+            </search>
+        </field>
+    </record>
+    <!-- This is A Graph View  -->
+    <record id="room_graph_view" model="ir.ui.view">
+        <field name="name">room.booking.graph.view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <graph string="Graph View">
+	           <field name="guest_id" type="row"/> 
+	           <field name="amount_with_tax" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <!-- This is A Activity View  -->
+    <record id="booking_activity_view" model="ir.ui.view">
+        <field name="name">room.booking.activity.view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <activity string="Room Booking">
+                <field name="guest_id" />
+                <field name="amount_with_tax" />
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="guest_id" display="full"/>
+                        </div>
+                    </div>
+                </templates>	         
+            </activity>
+        </field>
+    </record>
+    <!-- This is A Calender View  -->
+    <record id="booking_calender_view" model="ir.ui.view">
+        <field name="name">room.booking.calender.view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <calendar string="Booking Calender" date_start="check_in" color="guest_id">
+	           <field name="guest_id"/> 
+	           <field name="room_id"/>
+                <field name="gender"/>
+            </calendar>
+        </field>
+    </record>
+    <!-- This is A Pivot View  -->
+    <record id="booking_pivot_view" model="ir.ui.view">
+        <field name="name">room.booking.pivot.view</field>
+        <field name="model">room.booking</field>
+        <field name="priority" eval="2" />
+        <field name="arch" type="xml">
+            <pivot string="Booking Pivot">
+	           <field name="guest_id" type="row"/> 
+	           <field name="room_id" type="col"/>	
+	           <field name="amount_with_tax" type="measure"/>	         
+            </pivot>
+        </field>
+    </record>
+    <!-- This is A Kanban View  -->
+    <record id="booking_kanban_view" model="ir.ui.view">
+        <field name="name">room.booking.kanban.view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_res_partner_kanabn" js_class="website_pages_kanban" type="object" sample="1" default_group_by="status">
+            <progressbar field="status" sum_field="price" colors='{"draft":"success","confirmed":"success","checked_in":"warning","checked_out":"info","cancelled":"danger"}'/>
+                <field name="name"/>
+                <progressbar field="activity_status" colors="{&quot;planned&quot;: &quot;success&quot;, &quot;today&quot;: &quot;warning&quot;, &quot;overdue&quot;: &quot;danger&quot;}" sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly" help="This bar allows to filter the opportunities based on scheduled activities."/>
+                <template>
+                <t t-name="kanban-menu">
+                            <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                            <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        </t>
+                    <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
+                                    <i class="fa fa-user" role="img" aria-label="sample" title='sample'/>
+                                    <strong>
+                                        <field name="guest_id"/>
+                                    </strong>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div class="row" t-if="!selection_mode">
+                                    <div t-if="record.name" class="col-6 text-left">
+                                    <strong>Gender:</strong>
+                                    <field name="gender" />
+                                </div>
+
+                                <div t-if="record.amount_with_tax" class="col-6 text-right">
+                                    <strong>Total With Tax: </strong>
+                                    <field name="amount_with_tax"  widget="monetary" options="{'currency_field': 'company_currency'}"/>
+
+                                </div>
+                                
+                                <div>
+                                    <field name="tax_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="prioritys" widget="priority" groups="base.group_user"/>
+                                             <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                       
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
+        </field>
+    </record>
+    <!-- This is A Action  -->
+    <record id="action_room_booking" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">room.booking</field>
+        <field name="view_mode">tree,form,graph,activity,calendar,pivot,kanban</field>
+    </record>
+
+    <!-- This is A Main Submenu  -->
+
+    <menuitem id="menu_room_booking" name="Bookings" sequence="4" parent="menu_hotel_booking_root" action="action_room_booking"/>
+
+</odoo>

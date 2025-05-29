@@ -1,0 +1,63 @@
+<odoo>
+    <!-- Main Report Template -->
+    <template id="booking_template">
+        <t t-call="web.external_layout">
+            <div class="page" style="font-size: 20px;">
+                <h2 style="text-align: center; margin-top: 10px;">Hotel Booking Report</h2>
+
+                 <div style="margin-top:50px;">
+
+                 <div  class="d-flex">
+                     <h5 class="text-start" ><b>Start Date: </b><span t-esc="o.start_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></h5>
+                      <h5 class="text-end" style="margin-left:350px;" ><b>End Date: </b><span t-esc="o.end_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></h5>
+
+                 </div>
+
+             </div>
+
+                <table class="table table-sm" style="margin-top: 20px; width: 100%; border: 1px solid #000;">
+                    <thead style="background-color: #f0f0f0;">
+                        <tr>
+                            <th style="4px solid black; text-align: center;">Tracking</th>
+                            <th style="4px solid black; text-align: center;">Guest</th>
+                            <th style="4px solid black; text-align: center;">Room</th>
+                            <th style="4px solid black; text-align: center;">Check-In</th>
+                            <th style="4px solid black; text-align: center;">Check-Out</th>
+                            <th style="4px solid black; text-align: center;">Booking Date</th>
+                            <th style="4px solid black; text-align: center;">Total With Tax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <t t-set="total_amount" t-value="0"/>
+                        <t t-foreach="booking_history(o)" t-as="line">
+                            <tr>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.tracking"/></td>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.guest_id.name"/></td>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.room_id.name"/></td>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.check_in" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></td>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.check_out" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></td>
+                                <td style="1px solid black; text-align: center;"><t t-esc="line.booking_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/></td>
+                                <td style="1px solid black; text-align: right; "><span t-esc="o.currency_id.symbol"/><t t-esc="line.amount_with_tax"/></td>
+                            </tr>
+                            <t t-if="line.amount_with_tax">
+                                <t t-set="total_amount" t-value="total_amount + line.amount_with_tax"/>
+                            </t>   
+                        </t>
+                    </tbody>
+                </table>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <h4><b>Total Amount With Tax: </b><span t-esc="o.currency_id.symbol"/><span t-esc="total_amount"/></h4>
+                    </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Report Action Template -->
+    <template id="practice_template1">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="hotel_booking_system.booking_template"/>
+            </t>
+        </t>
+    </template>
+</odoo>

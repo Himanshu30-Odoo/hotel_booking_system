@@ -1,0 +1,76 @@
+<odoo>
+    <!-- This is A Form View  -->
+
+    <record id="view_hotel_room_form" model="ir.ui.view">
+        <field name="name">hotel.room.form</field>
+        <field name="model">hotel.room</field>
+        <field name="arch" type="xml">
+            <form>
+                    <!-- This is A Buttons -->
+                    <header>
+                        <button name="button_booked" type="object" string="Book Room"  class="btn btn-success"  invisible="status != 'available'"/>
+                        <button name="button_cleaning" type="object" string="Cleaning Room"  class="btn btn-info"  invisible="status != 'booked'"/>
+                        <button name="button_available" type="object" string="Available" class="btn btn-warning" invisible="status != 'cleaning'"/>
+
+                        <field name="status" widget="statusbar" statusbar_visible="available,booked,cleaning"/>
+                    </header>
+
+
+
+                <sheet>
+                
+                    <div style="width:100px;">
+                        <h1 class="d-flex">
+                            <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                            <field name="tracking" invisible="name == '/'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="room_type"/>
+                        <field name="price" widget="monetary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- This is A Tree View  -->
+    <record id="view_hotel_room_tree" model="ir.ui.view">
+        <field name="name">hotel.room.tree</field>
+        <field name="model">hotel.room</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="prioritys" optional="show" widget="priority" nolabel="1"/>
+                <field name="tracking" readonly="True"/>
+                <field name="name"/>
+                <field name="room_type"/>
+                <field name="price" widget="monetary"/>
+                <field name="currency_id" column_invisible="True" />
+                <field name="status" optional="show" widget="badge" decoration-success="status == 'booked'" decoration-warning="status == 'available'" decoration-info="status == 'cleaning'"/>
+            </tree>
+        </field>
+    </record>
+    <!-- This is A Graph View  -->
+    <record id="room_graph_view" model="ir.ui.view">
+        <field name="name">hotel.room.graph.view</field>
+        <field name="model">hotel.room</field>
+        <field name="arch" type="xml">
+            <graph string="Graph View">
+	           <field name="room_type" type="row"/> 
+	           <field name="price" type="measure"/>
+
+            </graph>
+        </field>
+    </record>
+
+    <!-- This is A Action  -->
+    <record id="action_hotel_rooms" model="ir.actions.act_window">
+        <field name="name">Rooms</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.room</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+    <!-- This is A Main Submenu  -->
+    <menuitem id="menu_hotel_booking_root" name="Hotel Booking" sequence="1"/>
+    <menuitem id="menu_hotel_rooms" name="Rooms" sequence="10" parent="menu_hotel_booking_root" action="action_hotel_rooms"/>
+</odoo>
